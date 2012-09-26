@@ -768,6 +768,15 @@ collectd_LDADD += "-dlopen" notify_email.la
 collectd_DEPENDENCIES += notify_email.la
 endif
 
+if BUILD_PLUGIN_NOTIFY_FILE
+pkglib_LTLIBRARIES += notify_file.la
+notify_file_la_SOURCES = notify_file.c
+notify_file_la_LDFLAGS = -module -avoid-version
+notify_file_la_LIBADD =
+collectd_LDADD += "-dlopen" notify_file.la
+collectd_DEPENDENCIES += notify_file.la
+endif
+
 if BUILD_PLUGIN_NTPD
 pkglib_LTLIBRARIES += ntpd.la
 ntpd_la_SOURCES = ntpd.c
@@ -1287,6 +1296,18 @@ write_mongodb_la_LDFLAGS = -module -avoid-version $(BUILD_WITH_LIBMONGOC_LDFLAGS
 write_mongodb_la_LIBADD = -lmongoc
 collectd_LDADD += "-dlopen" write_mongodb.la
 collectd_DEPENDENCIES += write_mongodb.la
+endif
+
+if BUILD_PLUGIN_WRITE_MYSQL
+pkglib_LTLIBRARIES += write_mysql.la
+write_mysql_la_SOURCES = write_mysql.c
+write_mysql_la_LDFLAGS = -module -avoid-version
+collectd_LDADD += "-dlopen" write_mysql.la
+if BUILD_WITH_LIBMYSQL
+write_mysql_la_CFLAGS = $(BUILD_WITH_LIBMYSQL_CFLAGS)
+write_mysql_la_LIBADD = $(BUILD_WITH_LIBMYSQL_LIBS) -lmysqlclient_r
+endif
+collectd_DEPENDENCIES += write_mysql.la
 endif
 
 if BUILD_PLUGIN_WRITE_REDIS
